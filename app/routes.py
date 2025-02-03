@@ -1,11 +1,18 @@
-from flask import request, jsonify
-from app import app, db
-from app.models import Task
+from flask import request, jsonify, current_app as app
+from .models import db, Task
 
 @app.route("/tasks", methods=["POST"])
 def create_task():
     data = request.get_json()
-    new_task = Task(title=data["title"], description=data.get("description", ""))
+
+    if not data or not data.get("title"):
+        return jsonify({"message": "Title is required"}), 400
+    
+    new_task = Task(
+        title=data["title"], 
+        description=data.get("description", ""),
+        completed=data.get("completed", False)
+    )
     db.session.add(new_task)
     db.session.commit()
     return jsonify({"message": "Task created"}), 201
