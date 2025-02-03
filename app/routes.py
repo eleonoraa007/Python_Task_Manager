@@ -1,6 +1,6 @@
 from flask import request, jsonify
 from app import app, db
-from models import Task
+from app.models import Task
 
 @app.route("/tasks", methods=["POST"])
 def create_task():
